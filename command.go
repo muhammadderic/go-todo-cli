@@ -6,7 +6,8 @@ import (
 )
 
 type CmdFlags struct {
-	Add string
+	Add  string
+	List bool
 }
 
 func NewCmdFlags() *CmdFlags {
@@ -19,6 +20,8 @@ func NewCmdFlags() *CmdFlags {
 		"",                             // default value if the flag is not provided
 		"Add a new todo specify title", // help message shown in `--help`
 	)
+	// how to use: go run ./ --list
+	flag.BoolVar(&cf.List, "list", false, "List all todos")
 	flag.Parse()
 
 	return &cf
@@ -26,6 +29,8 @@ func NewCmdFlags() *CmdFlags {
 
 func (cf *CmdFlags) Execute(todos *Todos) {
 	switch {
+	case cf.List:
+		todos.print()
 	case cf.Add != "":
 		todos.add(cf.Add)
 	default:
