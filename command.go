@@ -6,9 +6,10 @@ import (
 )
 
 type CmdFlags struct {
-	Add  string
-	Del  int
-	List bool
+	Add    string
+	Del    int
+	List   bool
+	Toggle int
 }
 
 func NewCmdFlags() *CmdFlags {
@@ -21,6 +22,8 @@ func NewCmdFlags() *CmdFlags {
 		"",                             // default value if the flag is not provided
 		"Add a new todo specify title", // help message shown in `--help`
 	)
+	// how to use: go run ./ --toggle=1
+	flag.IntVar(&cf.Toggle, "toggle", -1, "Specify todo by index to toggle complete true/false")
 	// how to use: go run ./ --del=1
 	flag.IntVar(&cf.Del, "del", -1, "Specify todo by index to delete")
 	// how to use: go run ./ --list
@@ -36,6 +39,8 @@ func (cf *CmdFlags) Execute(todos *Todos) {
 		todos.print()
 	case cf.Add != "":
 		todos.add(cf.Add)
+	case cf.Toggle != -1:
+		todos.toggle(cf.Toggle)
 	case cf.Del != -1:
 		todos.delete(cf.Del)
 	default:
